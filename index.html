@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tracery + P5.js Generator</title>
+    <script src="jquery-3.7.1.min.js"></script>
+    <script src="p5.min.js"></script>
+    <script src="tracery.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+        }
+        #generate {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Tracery + P5.js Generator</h1>
+    <button id="generate">Generate</button>
+
+    <script>
+        let grammarData;
+        let generatedText = "";
+
+        function preload() {
+            // Load the Tracery JSON grammar before setup
+            $.getJSON("grammar.json", function (data) {
+                grammarData = data;
+            }).fail(function () {
+                generatedText = "Error: Could not load grammar.json";
+            });
+        }
+
+        function setup() {
+            createCanvas(600, 400);
+            textSize(16);
+            textAlign(CENTER, CENTER);
+            fill(0);
+        }
+
+        function draw() {
+            background(240);
+            text(generatedText, width / 2, height / 2, width - 40, height - 40);
+        }
+
+        $(document).ready(function () {
+            $("#generate").click(function () {
+                if (!grammarData) {
+                    generatedText = "Error: Grammar not loaded yet.";
+                    return;
+                }
+
+                let grammar = tracery.createGrammar(grammarData);
+                generatedText = grammar.flatten("#origin#"); // Generate from origin rule
+            });
+        });
+    </script>
+
+</body>
+</html>
