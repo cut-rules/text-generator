@@ -34,6 +34,7 @@
             // Load the Tracery JSON grammar before setup
             $.getJSON("grammar.json", function (data) {
                 grammarData = data;
+                startGenerating(); // Start generating text once the grammar is loaded
             }).fail(function () {
                 generatedText = "Error: Could not load grammar.json";
             });
@@ -51,15 +52,24 @@
             text(generatedText, width / 2, height / 2, width - 40, height - 40);
         }
 
+        function generateText() {
+            if (!grammarData) {
+                generatedText = "Error: Grammar not loaded yet.";
+                return;
+            }
+
+            let grammar = tracery.createGrammar(grammarData);
+            generatedText = grammar.flatten("#animal#"); // Generate from the "animal" rule
+        }
+
+        function startGenerating() {
+            generateText(); // Generate text immediately
+            setInterval(generateText, 10000); // Generate text every 10 seconds
+        }
+
         $(document).ready(function () {
             $("#generate").click(function () {
-                if (!grammarData) {
-                    generatedText = "Error: Grammar not loaded yet.";
-                    return;
-                }
-
-                let grammar = tracery.createGrammar(grammarData);
-                generatedText = grammar.flatten("#origin#"); // Generate from origin rule
+                generateText(); // Manual generation on button click
             });
         });
     </script>
