@@ -131,9 +131,7 @@
 
         function drawFrisbee() {
             noFill();
-            stroke(0); // Black outline for frisbee rings
-            strokeWeight(.1);
-        
+            stroke(0); // Black outline for frisbee rings    
             // Draw the main frisbee circle (filled)
             fill(frisbeeColor);
             ellipse(frisbeeX, frisbeeY, frisbeeRadius * 2);
@@ -143,7 +141,6 @@
             for (let i = 1; i <= 3; i++) {
                 ellipse(frisbeeX, frisbeeY, frisbeeRadius * (1.1 - i * 0.05) * 2);
             }
-            strokeWeight(1);
             // Draw the star in the center of the frisbee
             drawStar(frisbeeX, frisbeeY, frisbeeRadius * 0.5, frisbeeRadius * 0.2, 5);
         }
