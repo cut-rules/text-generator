@@ -3,76 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tracery + P5.js Generator</title>
     <script src="jquery-3.7.1.min.js"></script>
     <script src="p5.min.js"></script>
     <script src="tracery.min.js"></script>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            margin: 20px;
+            font-family: "Times New Roman", serif;
+            text-align: justify;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f5f5f5;
         }
-        #generate {
-            margin-top: 20px;
-            padding: 10px 20px;
-            font-size: 16px;
-            cursor: pointer;
+        #content {
+            width: 60%;
+            max-width: 800px;
+            background: white;
+            padding: 40px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
     </style>
 </head>
 <body>
-
-    <h1>Tracery + P5.js Generator</h1>
-    <button id="generate">Generate</button>
-
+    <div id="content"></div>
+    <h1>Frisbee Articles</h1>
     <script>
         let grammarData;
-        let generatedText = "";
 
         function preload() {
-            // Load the Tracery JSON grammar before setup
             $.getJSON("grammar.json", function (data) {
                 grammarData = data;
-                startGenerating(); // Start generating text once the grammar is loaded
+                generateText();
             }).fail(function () {
-                generatedText = "Error: Could not load grammar.json";
+                document.getElementById("content").innerText = "Error: Could not load grammar.json";
             });
-        }
-
-        function setup() {
-            createCanvas(600, 400);
-            textSize(16);
-            textAlign(CENTER, CENTER);
-            fill(0);
-        }
-
-        function draw() {
-            background(240);
-            text(generatedText, width / 2, height / 2, width - 40, height - 40);
         }
 
         function generateText() {
             if (!grammarData) {
-                generatedText = "Error: Grammar not loaded yet.";
+                document.getElementById("content").innerText = "Error: Grammar not loaded yet.";
                 return;
             }
-
             let grammar = tracery.createGrammar(grammarData);
-            generatedText = grammar.flatten("#animal#"); // Generate from the "animal" rule
+            document.getElementById("content").innerText = grammar.flatten("#origin#");
         }
 
-        function startGenerating() {
-            generateText(); // Generate text immediately
-            setInterval(generateText, 10000); // Generate text every 10 seconds
-        }
-
-        $(document).ready(function () {
-            $("#generate").click(function () {
-                generateText(); // Manual generation on button click
-            });
-        });
+        preload();
     </script>
-
 </body>
 </html>
