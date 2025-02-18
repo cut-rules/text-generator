@@ -31,7 +31,6 @@
             // Load the Tracery JSON grammar before setup
             $.getJSON("grammar.json", function (data) {
                 grammarData = data;
-                generateTitle();
                 startGenerating(); // Start generating text once the grammar is loaded
             }).fail(function () {
                 generatedText = "Error: Could not load grammar.json";
@@ -39,7 +38,7 @@
         }
 
         function setup() {
-            createCanvas(windowWidth, windowHeight);
+            createCanvas(windowWidth/2, windowHeight/2);
             textSize(16);
             textAlign(CENTER, CENTER);
             fill(0);
