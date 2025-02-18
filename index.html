@@ -132,8 +132,35 @@
         function drawFrisbee() {
             fill(frisbeeColor);
             noStroke();
+            ellipseMode(CENTER); 
             ellipse(frisbeeX, frisbeeY, frisbeeRadius * 2);
+            let angleOffset = TWO_PI / 3; // 120 degrees apart
+            let innerCircleRadius = frisbeeRadius / 4; // Small inner circles
+            let distanceFromCenter = frisbeeRadius * 0.7; // Position from center
+            fill(255); // White color for contrast
+            for (let i = 0; i < 3; i++) {
+                let angle = i * angleOffset;
+                let x = frisbeeX + cos(angle) * distanceFromCenter;
+                let y = frisbeeY + sin(angle) * distanceFromCenter;
+                ellipse(x, y, innerCircleRadius * 2);
+            }    
+            drawStar(frisbeeX, frisbeeY, frisbeeRadius / 2, frisbeeRadius / 5, 5);
         }
+
+// Function to draw a star at a given position
+        function drawStar(x, y, radius1, radius2, numPoints) {
+            fill(255, 215, 0); // Gold star
+            beginShape();
+            let angleStep = PI / numPoints; // Alternate angles for points
+            for (let i = 0; i < TWO_PI; i += angleStep) {
+                let r = i % (angleStep * 2) === 0 ? radius1 : radius2;
+                let sx = x + cos(i) * r;
+                let sy = y + sin(i) * r;
+                vertex(sx, sy);
+            }
+            endShape(CLOSE);
+        }
+
 
         function moveFrisbee() {
             // Move the frisbee
