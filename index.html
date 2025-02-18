@@ -22,6 +22,7 @@
     </style>
 </head>
 <body>
+    <h1>Frisbee Article Generator</h1>
     <script>
         let grammarData;
         let generatedText = "";
@@ -47,15 +48,6 @@
         function draw() {
             background(240);
             text(generatedText, width / 2, height / 2, width - 40, height - 40);
-        }
-        function generateTitle() {
-             if (!grammarData) {
-                generatedText = "Error: Grammar not loaded yet.";
-                return;
-            }
-
-            let grammar = tracery.createGrammar(grammarData);
-            generatedTitle = grammar.flatten("#articleTitle#"); // Generate from the "animal" rule
         }
         function generateText() {
             if (!grammarData) {
