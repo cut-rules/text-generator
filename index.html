@@ -22,8 +22,6 @@
     </style>
 </head>
 <body>
-
-    <h1>Frisbee Article Generator</h1>
     <script>
         let grammarData;
         let generatedText = "";
@@ -32,6 +30,7 @@
             // Load the Tracery JSON grammar before setup
             $.getJSON("grammar.json", function (data) {
                 grammarData = data;
+                generateTitle();
                 startGenerating(); // Start generating text once the grammar is loaded
             }).fail(function () {
                 generatedText = "Error: Could not load grammar.json";
@@ -39,7 +38,7 @@
         }
 
         function setup() {
-            createCanvas(600, 400);
+            createCanvas(windowWidth, windowHeight);
             textSize(16);
             textAlign(CENTER, CENTER);
             fill(0);
@@ -49,7 +48,15 @@
             background(240);
             text(generatedText, width / 2, height / 2, width - 40, height - 40);
         }
+        function generateTitle() {
+             if (!grammarData) {
+                generatedText = "Error: Grammar not loaded yet.";
+                return;
+            }
 
+            let grammar = tracery.createGrammar(grammarData);
+            generatedTitle = grammar.flatten("#articleTitle#"); // Generate from the "animal" rule
+        }
         function generateText() {
             if (!grammarData) {
                 generatedText = "Error: Grammar not loaded yet.";
@@ -57,7 +64,7 @@
             }
 
             let grammar = tracery.createGrammar(grammarData);
-            generatedText = grammar.flatten("#animal#"); // Generate from the "animal" rule
+            generatedText = grammar.flatten("#origin#"); // Generate from the "animal" rule
         }
 
         function startGenerating() {
