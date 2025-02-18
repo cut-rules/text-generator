@@ -64,6 +64,7 @@
     <script>
         let grammarData;
         let generatedText = "";
+        let generatedTitle = "";
 
         function preload() {
             // Load the Tracery JSON grammar before setup
@@ -89,11 +90,13 @@
         function generateText() {
             if (!grammarData) {
                 generatedText = "Error: Grammar not loaded yet.";
+                generatedTitle = "Error: Grammar not loaded yet.";
                 return;
             }
 
             let grammar = tracery.createGrammar(grammarData);
-            generatedText = grammar.flatten("#origin#"); // Generate from the "animal" rule
+            generatedTitle = grammar.flatten("articleTitle");
+            generatedText = grammar.flatten("#origin#");
         }
 
         function startGenerating() {
