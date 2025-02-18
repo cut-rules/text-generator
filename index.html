@@ -15,12 +15,6 @@
             margin: 0;
             padding: 20px;
             line-height: 1.6;
-            display: flex;
-            justify-content: center;
-        }
-
-        .container {
-            display: flex;
         }
 
         h1 {
@@ -36,37 +30,42 @@
             background-color: #f9f9f9;
         }
 
-        /* Text canvas */
-        .text-container {
-            width: 75vw; /* 75% of screen width */
+        canvas {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            text-align: justify;
+            column-count: 2;
+            column-gap: 40px;
         }
 
-        /* Frisbee canvas (invisible) */
-        .frisbee-container {
-            width: 25vw; /* 25% of screen width */
-            background-color: #5c5a5a; /* Same as body to make it invisible */
+        /* Style for the generated text */
+        .generated-text {
+            font-size: 1.1rem;
+            color: #444;
+            text-indent: 1.5em;
+        }
+
+        /* Drop cap for the first paragraph */
+        .generated-text::first-letter {
+            font-size: 3rem;
+            float: left;
+            line-height: 1;
+            margin-right: 5px;
+            font-weight: bold;
+            color: #333;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="text-container">
-            <h1>Frisbee Article Generator</h1>
-            <div id="text-canvas-container"></div>
-        </div>
-        <div class="frisbee-container">
-            <div id="frisbee-canvas-container"></div>
-        </div>
-    </div>
-
+    <h1>Frisbee Article Generator</h1>
     <script>
         let grammarData;
         let generatedText = "";
         let generatedTitle = "";
         let frisbeeColor = "red"; // Default color
-
-        let textCanvas;
-        let frisbeeCanvas;
 
         let frisbeeX, frisbeeY; // Position of the frisbee
         let speedX, speedY; // Speed of the frisbee
@@ -81,22 +80,15 @@
         }
 
         function setup() {
-            // Create canvas for text
-            textCanvas = createCanvas(windowWidth * 0.75, windowHeight * 0.75);
-            textCanvas.parent("text-canvas-container"); // Attach to div
+            createCanvas(windowWidth * 7 / 8, windowHeight * 3 / 4);
             textSize(16);
             textAlign(CENTER, CENTER);
             fill(0);
 
-            // Create separate canvas for frisbee
-            frisbeeCanvas = createCanvas(windowWidth * 0.25, windowHeight * 0.75);
-            frisbeeCanvas.parent("frisbee-canvas-container"); // Attach to div
-            frisbeeCanvas.style("background-color", "#5c5a5a"); // Same as body (invisible)
-            
             tryStartGenerating();
 
-            // Set a random starting position **inside the frisbee canvas**
-            frisbeeX = random(frisbeeRadius, width - frisbeeRadius);
+            // Set a random starting position inside the right third of the screen
+            frisbeeX = random(width * 2 / 3 + frisbeeRadius, width - frisbeeRadius);
             frisbeeY = random(frisbeeRadius, height - frisbeeRadius);
 
             // Set random speeds, ensuring they aren't too slow
@@ -119,35 +111,29 @@
         }
 
         function draw() {
-            // Draw text content (inside textCanvas)
-            if (this === textCanvas) {
-                background(240);
+            background(240);
 
-                textSize(32);
-                textAlign(CENTER, CENTER);
-                fill(0);
-                textStyle(BOLD);
-                text(generatedTitle, width / 4, height / 16, width / 2, height * 1 / 8);
+            // Draw title
+            textSize(32);
+            textAlign(CENTER, CENTER);
+            fill(0);
+            textStyle(BOLD);
+            text(generatedTitle, width / 4, height / 16, width / 2, height * 1 / 8);
 
-                textSize(16);
-                textStyle(NORMAL);
-                text(generatedText, width / 8, height / 4, width * 6 / 8, height * 5 / 8);
-            }
+            // Draw text content
+            textSize(16);
+            textStyle(NORMAL);
+            text(generatedText, width / 8, height / 4, width * 6 / 8, height * 5 / 8);
 
-            // Draw the bouncing frisbee (inside frisbeeCanvas)
-            if (this === frisbeeCanvas) {
-                background("#5c5a5a"); // Invisible canvas background
-
-                drawFrisbee();
-                moveFrisbee();
-            }
+            // Draw the bouncing frisbee
+            drawFrisbee();
+            moveFrisbee();
         }
 
         function drawFrisbee() {
             fill(frisbeeColor);
             noStroke();
-            ellipseMode(CENTER);
-            ellipse(frisbeeX, frisbeeY, frisbeeRadius * 2, frisbeeRadius * 2);
+            ellipse(frisbeeX, frisbeeY, frisbeeRadius * 2);
         }
 
         function moveFrisbee() {
@@ -160,10 +146,10 @@
                 speedX *= -1;
                 frisbeeX = width - frisbeeRadius;
             }
-            // Bounce off left boundary of frisbee canvas
-            if (frisbeeX - frisbeeRadius < 0) {
+            // Bounce off left boundary of right third
+            if (frisbeeX - frisbeeRadius < width * 2 / 3) {
                 speedX *= -1;
-                frisbeeX = frisbeeRadius;
+                frisbeeX = width * 2 / 3 + frisbeeRadius;
             }
             // Bounce off top and bottom
             if (frisbeeY + frisbeeRadius > height) {
