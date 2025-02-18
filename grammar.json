@@ -1,5 +1,7 @@
 {
-    "animal": ["#paragraph1##paragraph2##paragraph3#"],
+    "origin": ["#paragraph1##paragraph2##paragraph3#"],
+    "articleName": ["#tournament# #articleWhen#"],
+    "articleWhen": ["Recap","Preview","Day 1 Recap","Day 2 Recap","Mid Tournament Evaluation"],
 
   "paragraph1": ["In #Gregorian_calendar_month.capitalize#, #team_name# (strong #contestant#) will play #team_name# in #match.s# on #weekday# at #tournament#. Leading the squad is #player_name#, a #quality# leader with #property#. Over the #time_period#, they've #travel# and #journey# across #region#, gathering intel to #evaluate# a new #formation#. According to #army_unit#, there's a #possibility# they'll #act# with #force# to #arouse# #people#'s #noise#. "],
 
