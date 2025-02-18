@@ -70,7 +70,6 @@
             // Load the Tracery JSON grammar before setup
             $.getJSON("grammar.json", function (data) {
                 grammarData = data;
-                startGenerating(); // Start generating text once the grammar is loaded
             }).fail(function () {
                 generatedText = "Error: Could not load grammar.json";
             });
@@ -81,6 +80,19 @@
             textSize(16);
             textAlign(CENTER, CENTER);
             fill(0);
+             tryStartGenerating(); 
+        }
+         function tryStartGenerating(attempt = 1) {
+            if (grammarData) {
+                console.log("Grammar data loaded. Starting text generation.");
+                startGenerating();
+            } else if (attempt <= 5) {  // Try up to 5 times before giving up
+                console.error(`Grammar data not loaded (attempt ${attempt}). Retrying in 1 second...`);
+                setTimeout(() => tryStartGenerating(attempt + 1), 1000);
+            } else {
+                console.error("Failed to load grammar data after multiple attempts.");
+                generatedText = "Error: Could not load grammar data.";
+            }
         }
 
         function draw() {
