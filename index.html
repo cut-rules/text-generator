@@ -10,42 +10,42 @@
     <style>
         /* Newspaper-style styling */
         body {
-            font-family: 'Georgia', serif; /* Classic serif font for a newspaper look */
-            background-color: #5c5a5a; /* Light gray background */
+            font-family: 'Georgia', serif;
+            background-color: #5c5a5a;
             margin: 0;
             padding: 20px;
-            line-height: 1.6; /* Improved readability */
+            line-height: 1.6;
         }
 
         h1 {
-            font-family: 'Times New Roman', serif; /* Traditional newspaper headline font */
+            font-family: 'Times New Roman', serif;
             font-size: 2.5rem;
             text-align: center;
             margin-bottom: 20px;
-            color: #333; /* Dark gray for contrast */
-            text-transform: uppercase; /* Uppercase for a classic headline look */
-            letter-spacing: 2px; /* Spacing between letters */
-            border-bottom: 2px solid #333; /* Line under the headline */
+            color: #333;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            border-bottom: 2px solid #333;
             padding-bottom: 10px;
-            background-color: #f9f9f9
+            background-color: #f9f9f9;
         }
 
         canvas {
-            max-width: 800px; /* Limit width for better readability */
-            margin: 0 auto; /* Center the canvas */
-            background-color: #fff; /* White background for the text area */
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             padding: 20px;
-            text-align: justify; /* Justify text for a newspaper look */
-            column-count: 2; /* Split text into two columns */
-            column-gap: 40px; /* Space between columns */
+            text-align: justify;
+            column-count: 2;
+            column-gap: 40px;
         }
 
         /* Style for the generated text */
         .generated-text {
             font-size: 1.1rem;
-            color: #444; /* Slightly lighter than black for readability */
-            text-indent: 1.5em; /* Indent the first line of each paragraph */
+            color: #444;
+            text-indent: 1.5em;
         }
 
         /* Drop cap for the first paragraph */
@@ -65,9 +65,13 @@
         let grammarData;
         let generatedText = "";
         let generatedTitle = "";
+        let frisbeeColor = "red"; // Default color
+
+        let frisbeeX, frisbeeY; // Position of the frisbee
+        let speedX, speedY; // Speed of the frisbee
+        let frisbeeRadius = 40; // Frisbee size
 
         function preload() {
-            // Load the Tracery JSON grammar before setup
             $.getJSON("grammar.json", function (data) {
                 grammarData = data;
             }).fail(function () {
@@ -76,17 +80,28 @@
         }
 
         function setup() {
-            createCanvas(windowWidth*7/8, windowHeight*3/4);
+            createCanvas(windowWidth * 7 / 8, windowHeight * 3 / 4);
             textSize(16);
             textAlign(CENTER, CENTER);
             fill(0);
-             tryStartGenerating(); 
+
+            tryStartGenerating();
+
+            // Set a random starting position inside the right third of the screen
+            frisbeeX = random(width * 2 / 3 + frisbeeRadius, width - frisbeeRadius);
+            frisbeeY = random(frisbeeRadius, height - frisbeeRadius);
+
+            // Set random speeds, ensuring they aren't too slow
+            speedX = random(3, 6) * (random() > 0.5 ? 1 : -1); // Random positive or negative
+            speedY = random(3, 6) * (random() > 0.5 ? 1 : -1);
         }
-         function tryStartGenerating(attempt = 1) {
+
+        function tryStartGenerating(attempt = 1) {
             if (grammarData) {
                 console.log("Grammar data loaded. Starting text generation.");
                 startGenerating();
-            } else if (attempt <= 5) {  // Try up to 5 times before giving up
+                generateFrisbeeColor(); // Generate frisbee color once grammar is ready
+            } else if (attempt <= 5) {
                 console.error(`Grammar data not loaded (attempt ${attempt}). Retrying in 1 second...`);
                 setTimeout(() => tryStartGenerating(attempt + 1), 1000);
             } else {
@@ -97,16 +112,56 @@
 
         function draw() {
             background(240);
+
+            // Draw title
             textSize(32);
             textAlign(CENTER, CENTER);
             fill(0);
-            textStyle(BOLD); 
-            text(generatedTitle, width/4 , height/16, width/2, height*1/8);
-            textSize(16);  
+            textStyle(BOLD);
+            text(generatedTitle, width / 4, height / 16, width / 2, height * 1 / 8);
+
+            // Draw text content
+            textSize(16);
             textStyle(NORMAL);
-            text(generatedText, width / 8, height / 4, width*6/8, height*5/8);
+            text(generatedText, width / 8, height / 4, width * 6 / 8, height * 5 / 8);
+
+            // Draw the bouncing frisbee
+            drawFrisbee();
+            moveFrisbee();
         }
-        
+
+        function drawFrisbee() {
+            fill(frisbeeColor);
+            noStroke();
+            ellipse(frisbeeX, frisbeeY, frisbeeRadius * 2);
+        }
+
+        function moveFrisbee() {
+            // Move the frisbee
+            frisbeeX += speedX;
+            frisbeeY += speedY;
+
+            // Bounce off right wall
+            if (frisbeeX + frisbeeRadius > width) {
+                speedX *= -1;
+                frisbeeX = width - frisbeeRadius;
+            }
+            // Bounce off left boundary of right third
+            if (frisbeeX - frisbeeRadius < width * 2 / 3) {
+                speedX *= -1;
+                frisbeeX = width * 2 / 3 + frisbeeRadius;
+            }
+            // Bounce off top and bottom
+            if (frisbeeY + frisbeeRadius > height) {
+                speedY *= -1;
+                frisbeeY = height - frisbeeRadius;
+            }
+            if (frisbeeY - frisbeeRadius < 0) {
+                speedY *= -1;
+                frisbeeY = frisbeeRadius;
+            }
+        }
+
         function generateText() {
             if (!grammarData) {
                 generatedText = "Error: Grammar not loaded yet.";
@@ -120,10 +175,17 @@
         }
 
         function startGenerating() {
-            generateText(); // Generate text immediately
-            setInterval(generateText, 10000); // Generate text every 10 seconds
+            generateText();
+            setInterval(generateText, 10000);
+        }
+
+        function generateFrisbeeColor() {
+            if (grammarData) {
+                let grammar = tracery.createGrammar(grammarData);
+                frisbeeColor = grammar.flatten("#color#");
+                console.log("Generated Frisbee Color:", frisbeeColor);
+            }
         }
     </script>
-
 </body>
 </html>
