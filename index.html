@@ -130,21 +130,22 @@
         }
 
         function drawFrisbee() {
+            noFill();
+            stroke(0); // Black outline for frisbee rings
+            strokeWeight(2);
+        
+            // Draw the main frisbee circle (filled)
             fill(frisbeeColor);
-            noStroke();
-            ellipseMode(CENTER); 
             ellipse(frisbeeX, frisbeeY, frisbeeRadius * 2);
-            let angleOffset = TWO_PI / 3; // 120 degrees apart
-            let innerCircleRadius = frisbeeRadius / 4; // Small inner circles
-            let distanceFromCenter = frisbeeRadius * 0.7; // Position from center
-            fill(255); // White color for contrast
-            for (let i = 0; i < 3; i++) {
-                let angle = i * angleOffset;
-                let x = frisbeeX + cos(angle) * distanceFromCenter;
-                let y = frisbeeY + sin(angle) * distanceFromCenter;
-                ellipse(x, y, innerCircleRadius * 2);
-            }    
-            drawStar(frisbeeX, frisbeeY, frisbeeRadius / 2, frisbeeRadius / 5, 5);
+        
+            // Draw the three concentric outline circles (frisbee ridges)
+            noFill(); // No fill for the ridges
+            for (let i = 1; i <= 3; i++) {
+                ellipse(frisbeeX, frisbeeY, frisbeeRadius * (1.1 - i * 0.05) * 2);
+            }
+        
+            // Draw the star in the center of the frisbee
+            drawStar(frisbeeX, frisbeeY, frisbeeRadius * 0.5, frisbeeRadius * 0.2, 5);
         }
 
 // Function to draw a star at a given position
