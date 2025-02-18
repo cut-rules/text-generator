@@ -8,16 +8,53 @@
     <script src="p5.min.js"></script>
     <script src="tracery.min.js"></script>
     <style>
+        /* Newspaper-style styling */
         body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            margin: 20px;
+            font-family: 'Georgia', serif; /* Classic serif font for a newspaper look */
+            background-color: #f9f9f9; /* Light gray background */
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6; /* Improved readability */
         }
-        #generate {
-            margin-top: 20px;
-            padding: 10px 20px;
-            font-size: 16px;
-            cursor: pointer;
+
+        h1 {
+            font-family: 'Times New Roman', serif; /* Traditional newspaper headline font */
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333; /* Dark gray for contrast */
+            text-transform: uppercase; /* Uppercase for a classic headline look */
+            letter-spacing: 2px; /* Spacing between letters */
+            border-bottom: 2px solid #333; /* Line under the headline */
+            padding-bottom: 10px;
+        }
+
+        canvas {
+            max-width: 800px; /* Limit width for better readability */
+            margin: 0 auto; /* Center the canvas */
+            background-color: #fff; /* White background for the text area */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+            padding: 20px;
+            text-align: justify; /* Justify text for a newspaper look */
+            column-count: 2; /* Split text into two columns */
+            column-gap: 40px; /* Space between columns */
+        }
+
+        /* Style for the generated text */
+        .generated-text {
+            font-size: 1.1rem;
+            color: #444; /* Slightly lighter than black for readability */
+            text-indent: 1.5em; /* Indent the first line of each paragraph */
+        }
+
+        /* Drop cap for the first paragraph */
+        .generated-text::first-letter {
+            font-size: 3rem;
+            float: left;
+            line-height: 1;
+            margin-right: 5px;
+            font-weight: bold;
+            color: #333;
         }
     </style>
 </head>
